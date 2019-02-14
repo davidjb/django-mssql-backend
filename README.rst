@@ -29,19 +29,25 @@ Features
 Dependencies
 ------------
 
--  Django 2.1
--  pyodbc 3.0 or newer
+- Django 2.1
+- pyodbc 3.0 or newer
+- Appropriate driver installed and configured for use by pyodbc
 
 Installation
 ------------
 
-1. Install pyodbc and Django
+#. Install pyodbc and Django
 
-2. Install django-pyodbc-azure ::
+#. Install your chosen ODBC driver and ensure it is available to pyodbc.
+   Setup depends on your operating system; install instructions for
+   most platforms are available on the `pyodbc wiki
+   <https://github.com/mkleehammer/pyodbc/wiki>`_.
+
+#. Install django-pyodbc-azure ::
 
     pip install django-pyodbc-azure
 
-3. Now you can point the ``ENGINE`` setting in the settings file used by
+#. Now you can point the ``ENGINE`` setting in the settings file used by
    your Django application or project to the ``'sql_server.pyodbc'``
    module path ::
 
@@ -125,6 +131,10 @@ Dictionary. Current available keys are:
    String. ODBC Driver to use (``"ODBC Driver 13 for SQL Server"``,
    ``"SQL Server Native Client 11.0"``, ``"FreeTDS"`` etc).
    Default is ``"ODBC Driver 13 for SQL Server"``.
+   
+   The specified driver must be installed and available to
+   ``pyodbc``; follow instructions on the `pyodbc wiki <https://github.com/mkleehammer/pyodbc/wiki>`_
+   for how to install the relevant drivers on your system.
 
 -  isolation_level
 
@@ -152,7 +162,7 @@ Dictionary. Current available keys are:
    definition present in the ``freetds.conf`` FreeTDS configuration file
    instead of a hostname or an IP address.
 
-   But if this option is present and it's value is ``True``, this
+   But if this option is present and its value is ``True``, this
    special behavior is turned off.
 
    See http://www.freetds.org/userguide/dsnless.htm for more information.
