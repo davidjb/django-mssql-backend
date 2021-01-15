@@ -14,8 +14,9 @@ from django.db.backends.ddl_references import (
     Statement as DjStatement,
     Table,
 )
-from django.db.models import Index
+from django.db.models import Index, UniqueConstraint
 from django.db.models.fields import AutoField, BigAutoField
+from django.db.models.sql.where import AND
 from django.db.transaction import TransactionManagementError
 from django.utils.encoding import force_str
 
@@ -970,3 +971,9 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
         for sql in list(self.deferred_sql):
             if isinstance(sql, Statement) and sql.references_column(model._meta.db_table, field.column):
                 self.deferred_sql.remove(sql)
+
+    def add_constraint(self, model, constraint):
+        if isinstance(constraint, UniqueConstraint) and constraint.condition and constraint.condition.connector != AND:
+            raise NotImplementedError("The backend does not support %s conditions on unique constraint %s." %
+                                      (constraint.condition.connector, constraint.name))
+        super().add_constraint(model, constraint)
